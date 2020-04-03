@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Form from "./components/Form";
 import "bulma/css/bulma.min.css";
 import "./App.css";
+import ThankYou from "./components/ThankYou";
 
 function App() {
+  const [submitted, setSubmitted] = useState(false);
   return (
     <div className="App">
-      <Form/>
+      { !submitted ? <Form submitted={setSubmitted}/>: <ThankYou/> }
     </div>
   );
 }

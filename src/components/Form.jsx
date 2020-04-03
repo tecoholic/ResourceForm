@@ -5,11 +5,13 @@ import axios from "axios";
 
 const URL = "https://script.google.com/macros/s/AKfycbwHj7uu5r3VI8jjCvegFaKHFGuMT2vmldRHqc-XN1_6g9KZyog/exec";
 
-const Form = () => {
+const Form = (props) => {
   const { handleSubmit, register, errors } = useForm();
   const [currentLocation, setCurrentLocation] = useState([78, 15]);
   const [locationFetched, setLocationFetched] = useState(false);
   const [error, setError] = useState(null);
+  const [submittingForm, setSubmittingForm] = useState(false);
+  const [submissionError, setSubmissionError] = useState(null);
 
   useEffect(() => {
     if (locationFetched) {
@@ -30,15 +32,23 @@ const Form = () => {
   }, [locationFetched]);
 
   const onSubmit = values => {
+    setSubmittingForm(true);
     const data = values;
     data['location'] = `http://www.google.com/maps/place/${currentLocation[0]},${currentLocation[1]}`;
     axios.get(URL, {params: data}).then(resp => {
-      console.log(resp)
+      props.submitted(true);
+    }).catch(err => {
+      setSubmissionError("Failed to send request!")
     });
   };
   
   return (
     <form className="section" onSubmit={handleSubmit(onSubmit)}>
+      {
+        submissionError ?
+        <div className="notificaiton is-danger">{submissionError}</div> :
+        <></>
+      }
       <div className="field">
         <label className="label" htmlFor="name">Name</label>
         <div className="control">
@@ -135,13 +145,9 @@ const Form = () => {
 
       <div className="field">
         <div className="control">
-          <button className="button is-link">Submit</button>
+          <button className={'button is-link' + (submittingForm ? ' is-loading': '') }>Submit</button>
         </div>
       </div>
-
-
-
-
 
     </form>
   );
