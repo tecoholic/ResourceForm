@@ -1,5 +1,29 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# ResourceForm
 
+## Deployment
+
+### Setting up the backend
+The backend is a Google Function macro that will receive GET requests from the form
+and update a Google Sheet. Follow this guide to setup the function and get your macro URL.
+[How to Submit an HTML Form to Google Sheets…without Google Forms](https://medium.com/@dmccoy/how-to-submit-an-html-form-to-google-sheets-without-google-forms-b833952cc175)
+
+### Configuring this app
+
+Enter the Google Macro URL in the `src/config.js` file.
+
+### Build the application
+
+```shell script
+yarn && yarn build
+```
+The form will be build and made available in the `build` directory with an index.html and other related files which can
+then be hosted anywhere.
+
+---------------------------------------------------------------------------------
+
+## General React app docs
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 ## Available Scripts
 
 In the project directory, you can run:

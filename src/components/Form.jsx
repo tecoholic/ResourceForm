@@ -3,8 +3,6 @@ import {useForm} from "react-hook-form";
 import LocationSelector from "./LocationSelector";
 import axios from "axios";
 
-const URL = "https://script.google.com/macros/s/AKfycbwHj7uu5r3VI8jjCvegFaKHFGuMT2vmldRHqc-XN1_6g9KZyog/exec";
-
 const Form = (props) => {
   const { handleSubmit, register, errors } = useForm();
   const [currentLocation, setCurrentLocation] = useState([78, 15]);
@@ -35,7 +33,7 @@ const Form = (props) => {
     setSubmittingForm(true);
     const data = values;
     data['location'] = `http://www.google.com/maps/place/${currentLocation[0]},${currentLocation[1]}`;
-    axios.get(URL, {params: data}).then(resp => {
+    axios.get(props.url, {params: data}).then(resp => {
       props.submitted(true);
     }).catch(err => {
       setSubmissionError("Failed to send request!")
