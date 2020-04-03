@@ -1,15 +1,19 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {useForm} from "react-hook-form";
 import LocationSelector from "./LocationSelector";
 import axios from "axios";
 
 const Form = (props) => {
   const { handleSubmit, register, errors } = useForm();
-  const [currentLocation, setCurrentLocation] = useState([78, 15]);
+  const [currentLocation, setCurrentLocation] = useState([15, 78]);
   const [locationFetched, setLocationFetched] = useState(false);
   const [error, setError] = useState(null);
   const [submittingForm, setSubmittingForm] = useState(false);
   const [submissionError, setSubmissionError] = useState(null);
+  const image1Input = useRef();
+  const image2Input = useRef();
+  const [image1, setImage1] = useState({file: "", preview: ""});
+  const [image2, setImage2] = useState({file: "", preview: ""});
 
   useEffect(() => {
     if (locationFetched) {
@@ -39,6 +43,30 @@ const Form = (props) => {
       setSubmissionError("Failed to send request!")
     });
   };
+
+  const loadImage1 = () => {
+    const reader = new FileReader();
+    let file = image1Input.current.files[0];
+    reader.onloadend = () => {
+      setImage1({
+        file: file,
+        preview: reader.result
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const loadImage2 = () => {
+    const reader = new FileReader();
+    let file = image2Input.current.files[0];
+    reader.onloadend = () => {
+      setImage2({
+        file: file,
+        preview: reader.result
+      });
+    };
+    reader.readAsDataURL(file);
+  };
   
   return (
     <form className="section" onSubmit={handleSubmit(onSubmit)}>
@@ -48,90 +76,108 @@ const Form = (props) => {
         <></>
       }
       <div className="field">
-        <label className="label" htmlFor="name">Name</label>
+        <label htmlFor="date" className="label">Date</label>
+        <div className="control">
+          <input
+            className="input"
+            type="date"
+            id="date"
+            name="date"
+            ref={register({required: "Required"})}
+            defaultValue={new Date().toISOString().split("T")[0]}
+            disabled={true}
+          />
+        </div>
+        {errors.date && errors.date.message ?
+          <p className="help is-danger">{ errors.date.message }</p> :
+          <></>}
+      </div>
+      <div className="field">
+        <label className="label" htmlFor="name">Volunteer Name</label>
         <div className="control">
           <input
             className="input"
             type="text"
-            id="name"
-            name="name"
+            id="volunteer_name"
+            name="volunteer_name"
             ref={register({
               required: 'Required'
             })}
           />
         </div>
-        {errors.name && errors.name.message ?
-          <p className="help is-danger">{ errors.name.message }</p> :
-          <></>
-        }
+        {errors.volunteer_name && errors.volunteer_name.message ?
+          <p className="help is-danger">{ errors.volunteer_name.message }</p> :
+          <></>}
       </div>
 
       <div className="field">
-        <label className="label" htmlFor="phoneNumber">Phone Number</label>
+        <label className="label" htmlFor="mobile_no">Mobile Number</label>
         <div className="control">
           <input
             className="input"
             type="text"
-            name="phone"
-            id="phoneNumber"
+            name="mobile_no"
+            id="mobile_no"
             ref={register({
               required: 'Required',
               pattern: {
                 value: /^\d{10}$/i,
-                message: "Invalid Phone Number"
+                message: "Mobile number should contain 10 digits"
               }
             })}
           />
         </div>
-        {errors.phone && errors.phone.message ?
-          <p className="help is-danger">{ errors.phone.message }</p> :
-          <></>
-        }
+        {errors.mobile_no && errors.mobile_no.message ?
+          <p className="help is-danger">{ errors.mobile_no.message }</p> :
+          <></>}
       </div>
 
       <div className="field">
-        <label htmlFor="food_packets" className="label">Food Packets</label>
+        <label htmlFor="time" className="label">Time</label>
+        <div className="control">
+          <div className="select">
+            <select name="time" id="time" ref={register} defaultValue="morning">
+              <option value="morning">Morning</option>
+              <option value="evening">Evening</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div className="field">
+        <label htmlFor="vehicle_number" className="label">Vehicle Number</label>
         <div className="control">
           <input
-            type="number"
             className="input"
-            id="food_packets"
-            name="food_packets"
-            min={0}
-            ref={register({
-              required: 'Required',
-              pattern: {
-                value: /^\d*$/i,
-                message: "Invalid number"
-              }
-            })}
+            type="text"
+            name="vehicle_number"
+            id="vehicle_number"
+            ref={register({required: "Required"})}
           />
         </div>
-        {
-          errors.food_packets && errors.food_packets.message ?
-            <p className="help is-danger">{ errors.food_packets.message }</p> :
-            <></>
-        }
+        {errors.vehicle_number && errors.vehicle_number.message ?
+          <p className="help is-danger">{ errors.vehicle_number.message }</p> :
+          <></>}
       </div>
 
       <div className="field">
-        <label className="label" htmlFor="address">Address</label>
+        <label className="label" htmlFor="address">Location</label>
         <div className="control">
-          <textarea
-            name="address"
-            id="address"
-            className="textarea"
+          <input
+            name="location"
+            id="location"
+            className="input"
             ref={register({
               required: "Required"
             })}
           />
         </div>
+        {errors.location && errors.location.message ?
+          <p className="help is-danger">{ errors.location.message }</p> :
+          <></>}
       </div>
 
       <div className="field">
-        <label htmlFor="location" className="label">
-          Location
-        </label>
         <div className="field">
           {error ? <div className="notification is-warning">{error}</div> : <></>}
           <p className="help is-info">
@@ -140,6 +186,54 @@ const Form = (props) => {
           <LocationSelector currentLocation={currentLocation} updateLocation={setCurrentLocation} />
         </div>
       </div>
+
+      <h4 className="has-text-weight-bold">Photo 1</h4>
+      <div className="file">
+        <label className="file-label">
+          <input
+            className="file-input"
+            type="file"
+            name="image_1"
+            id="image_1"
+            accept="image/*"
+            ref={image1Input}
+            onChange={loadImage1}
+          />
+          <span className="file-cta">
+            <span className="file-label">
+              Choose a file…
+            </span>
+          </span>
+        </label>
+      </div>
+
+      <figure className="image my">
+        <img src={image1.preview} alt=""/>
+      </figure>
+
+      <h4 className="has-text-weight-bold">Photo 2</h4>
+      <div className="file">
+        <label className="file-label">
+          <input
+            className="file-input"
+            type="file"
+            name="image_2"
+            id="image_2"
+            accept="image/*"
+            ref={image2Input}
+            onChange={loadImage2}
+          />
+          <span className="file-cta">
+            <span className="file-label">
+              Choose a file…
+            </span>
+          </span>
+        </label>
+      </div>
+
+      <figure className="image my">
+        <img src={image2.preview} alt=""/>
+      </figure>
 
       <div className="field">
         <div className="control">

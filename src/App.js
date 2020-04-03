@@ -9,6 +9,7 @@ function App() {
   const [submitted, setSubmitted] = useState(false);
   return (
     <div className="App">
+      <h1 className="is-size-4 has-text-centered">DIPR Food Centre Management Resource form</h1>
       { !submitted ? <Form url={GOOGLE_MACRO_URL} submitted={setSubmitted}/>: <ThankYou/> }
     </div>
   );

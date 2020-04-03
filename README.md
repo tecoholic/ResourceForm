@@ -9,11 +9,15 @@ and update a Google Sheet. Follow this guide to setup the function and get your 
 
 The columns in the Google Sheet
 
-* name
-* phone
-* food_packets
-* ddress
-* location
+* date
+* volunteer_name
+* mobile_no
+* time
+* vehicle_number
+* location_name
+* location_gps
+* image_1
+* image_2
 
 ### Configuring this app
 
