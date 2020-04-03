@@ -7,6 +7,14 @@ The backend is a Google Function macro that will receive GET requests from the f
 and update a Google Sheet. Follow this guide to setup the function and get your macro URL.
 [How to Submit an HTML Form to Google Sheets…without Google Forms](https://medium.com/@dmccoy/how-to-submit-an-html-form-to-google-sheets-without-google-forms-b833952cc175)
 
+The columns in the Google Sheet
+
+* name
+* phone
+* food_packets
+* ddress
+* location
+
 ### Configuring this app
 
 Enter the Google Macro URL in the `src/config.js` file.
