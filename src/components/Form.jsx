@@ -202,10 +202,10 @@ const Form = (props) => {
         </div>
       </div>
 
-      <h4 className="has-text-weight-bold">Photo 1</h4>
+      <h4 className="has-text-weight-bold">Landmark Photo</h4>
       <PhotoSelector setFile={setImage1}/>
 
-      <h4 className="has-text-weight-bold">Photo 2</h4>
+      <h4 className="has-text-weight-bold">Location Photo</h4>
       <PhotoSelector setFile={setImage2}/>
 
       <div className="field">
