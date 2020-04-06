@@ -1,19 +1,27 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import LocationSelector from "./LocationSelector";
+import PhotoSelector from "./PhotoSelector";
 import axios from "axios";
+import {createAlbum, addPhoto} from "../utils/upload_images";
 
 const Form = (props) => {
+  const status = {
+    PENDING: 0,
+    STARTED: 1,
+    COMPLETE: 2,
+    ERROR: 3
+  };
   const { handleSubmit, register, errors } = useForm();
   const [currentLocation, setCurrentLocation] = useState([15, 78]);
   const [locationFetched, setLocationFetched] = useState(false);
   const [error, setError] = useState(null);
   const [submittingForm, setSubmittingForm] = useState(false);
   const [submissionError, setSubmissionError] = useState(null);
-  const image1Input = useRef();
-  const image2Input = useRef();
-  const [image1, setImage1] = useState({file: "", preview: ""});
-  const [image2, setImage2] = useState({file: "", preview: ""});
+  const [image1, setImage1] = useState(null);
+  const [image2, setImage2] = useState(null);
+  const [upload1, setUpload1] = useState(status.PENDING);
+  const [upload2, setUpload2] = useState(status.PENDING);
 
   useEffect(() => {
     if (locationFetched) {
@@ -34,8 +42,33 @@ const Form = (props) => {
   }, [locationFetched]);
 
   const onSubmit = values => {
-    setSubmittingForm(true);
     const data = values;
+    setSubmittingForm(true);
+
+    // Create S3 Album and upload the photos
+    createAlbum().then(album => {
+      if (image1) {
+        addPhoto(album, image1, data.mobile_no)
+          .then(obj => {
+            setUpload1(status.COMPLETE);
+            data["image_1"] = obj.Location;
+          })
+          .catch(() => setUpload1(status.ERROR));
+      }
+      if (image2) {
+        addPhoto(album, image2)
+          .then(obj => {
+            setUpload2(status.COMPLETE);
+            data["image_2"] = obj.Location;
+          })
+          .catch(() => setUpload2(status.ERROR));
+      }
+
+    }).catch(err => {
+      console.log(err);
+      alert("Cannot upload photos!");
+    });
+
     data['location'] = `http://www.google.com/maps/place/${currentLocation[0]},${currentLocation[1]}`;
     axios.get(props.url, {params: data}).then(resp => {
       props.submitted(true);
@@ -44,30 +77,6 @@ const Form = (props) => {
     });
   };
 
-  const loadImage1 = () => {
-    const reader = new FileReader();
-    let file = image1Input.current.files[0];
-    reader.onloadend = () => {
-      setImage1({
-        file: file,
-        preview: reader.result
-      });
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const loadImage2 = () => {
-    const reader = new FileReader();
-    let file = image2Input.current.files[0];
-    reader.onloadend = () => {
-      setImage2({
-        file: file,
-        preview: reader.result
-      });
-    };
-    reader.readAsDataURL(file);
-  };
-  
   return (
     <form className="section" onSubmit={handleSubmit(onSubmit)}>
       {
@@ -188,52 +197,10 @@ const Form = (props) => {
       </div>
 
       <h4 className="has-text-weight-bold">Photo 1</h4>
-      <div className="file">
-        <label className="file-label">
-          <input
-            className="file-input"
-            type="file"
-            name="image_1"
-            id="image_1"
-            accept="image/*"
-            ref={image1Input}
-            onChange={loadImage1}
-          />
-          <span className="file-cta">
-            <span className="file-label">
-              Choose a file…
-            </span>
-          </span>
-        </label>
-      </div>
-
-      <figure className="image my">
-        <img src={image1.preview} alt=""/>
-      </figure>
+      <PhotoSelector setFile={setImage1}/>
 
       <h4 className="has-text-weight-bold">Photo 2</h4>
-      <div className="file">
-        <label className="file-label">
-          <input
-            className="file-input"
-            type="file"
-            name="image_2"
-            id="image_2"
-            accept="image/*"
-            ref={image2Input}
-            onChange={loadImage2}
-          />
-          <span className="file-cta">
-            <span className="file-label">
-              Choose a file…
-            </span>
-          </span>
-        </label>
-      </div>
-
-      <figure className="image my">
-        <img src={image2.preview} alt=""/>
-      </figure>
+      <PhotoSelector setFile={setImage2}/>
 
       <div className="field">
         <div className="control">
