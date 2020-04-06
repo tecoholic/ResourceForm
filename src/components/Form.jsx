@@ -69,7 +69,7 @@ const Form = (props) => {
       alert("Cannot upload photos!");
     });
 
-    data['location'] = `http://www.google.com/maps/place/${currentLocation[0]},${currentLocation[1]}`;
+    data['location_gps'] = `http://www.google.com/maps/place/${currentLocation[0]},${currentLocation[1]}`;
     axios.get(props.url, {params: data}).then(resp => {
       props.submitted(true);
     }).catch(err => {
@@ -170,11 +170,11 @@ const Form = (props) => {
       </div>
 
       <div className="field">
-        <label className="label" htmlFor="address">Location</label>
+        <label className="label" htmlFor="location_name">Location</label>
         <div className="control">
           <input
-            name="location"
-            id="location"
+            name="location_name"
+            id="location_name"
             className="input"
             ref={register({
               required: "Required"
