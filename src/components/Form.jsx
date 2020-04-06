@@ -41,40 +41,46 @@ const Form = (props) => {
     navigator.geolocation.getCurrentPosition(success, error);
   }, [locationFetched]);
 
-  const onSubmit = values => {
+  const onSubmit = async (values) => {
     const data = values;
     setSubmittingForm(true);
 
     // Create S3 Album and upload the photos
-    createAlbum().then(album => {
-      if (image1) {
-        addPhoto(album, image1, data.mobile_no)
-          .then(obj => {
-            setUpload1(status.COMPLETE);
-            data["image_1"] = obj.Location;
-          })
-          .catch(() => setUpload1(status.ERROR));
-      }
-      if (image2) {
-        addPhoto(album, image2)
-          .then(obj => {
-            setUpload2(status.COMPLETE);
-            data["image_2"] = obj.Location;
-          })
-          .catch(() => setUpload2(status.ERROR));
-      }
+    let album = '';
+    try {
+      album = await createAlbum();
+    } catch (e) {
+      alert("Cannot Upload Photos!");
+      return;
+    }
 
-    }).catch(err => {
-      console.log(err);
-      alert("Cannot upload photos!");
-    });
+    if (image1) {
+      try {
+        const obj = await addPhoto(album, image1, values.mobile_no);
+        setUpload1(status.COMPLETE);
+        data["image_1"] = obj.Location;
+      } catch (e) {
+        setUpload1(status.ERROR)
+      }
+    }
+
+    if (image2) {
+      try {
+        const obj = await addPhoto(album, image2, values.mobile_no);
+        setUpload1(status.COMPLETE);
+        data["image_2"] = obj.Location;
+      } catch (e) {
+        setUpload2(status.ERROR)
+      }
+    }
 
     data['location_gps'] = `http://www.google.com/maps/place/${currentLocation[0]},${currentLocation[1]}`;
-    axios.get(props.url, {params: data}).then(resp => {
+    try {
+      await axios.get(props.url, {params: data});
       props.submitted(true);
-    }).catch(err => {
+    } catch (e) {
       setSubmissionError("Failed to send request!")
-    });
+    }
   };
 
   return (
