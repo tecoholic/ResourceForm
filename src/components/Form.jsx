@@ -181,8 +181,8 @@ const Form = (props) => {
             })}
           />
         </div>
-        {errors.location && errors.location.message ?
-          <p className="help is-danger">{ errors.location.message }</p> :
+        {errors.location_name && errors.location_name.message ?
+          <p className="help is-danger">{ errors.location_name.message }</p> :
           <></>}
       </div>
 
