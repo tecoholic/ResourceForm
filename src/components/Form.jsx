@@ -230,23 +230,6 @@ const Form = (props) => {
           </div>
         </div>
       </div>
-      <div className="field">
-        <label className="label" htmlFor="present_landmark">Present Landmark</label>
-        <div className="control">
-          <input
-            className="input"
-            type="text"
-            id="present_landmark"
-            name="present_landmark"
-            ref={register({
-              required: 'Required'
-            })}
-          />
-        </div>
-        {errors.present_landmark && errors.present_landmark.message ?
-          <p className="help is-danger">{errors.present_landmark.message}</p> :
-          <></>}
-      </div>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <label className="label" htmlFor="total_men">Total Men</label>
@@ -351,6 +334,24 @@ const Form = (props) => {
           </div>
         </Grid>
       </Grid>
+
+      <div className="field">
+        <label className="label" htmlFor="present_landmark">Present Landmark</label>
+        <div className="control">
+          <input
+            className="input"
+            type="text"
+            id="present_landmark"
+            name="present_landmark"
+            ref={register({
+              required: 'Required'
+            })}
+          />
+        </div>
+        {errors.present_landmark && errors.present_landmark.message ?
+          <p className="help is-danger">{errors.present_landmark.message}</p> :
+          <></>}
+      </div>
 
       <div className="field">
         <div className="field">

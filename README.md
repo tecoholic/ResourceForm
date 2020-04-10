@@ -9,12 +9,18 @@ and update a Google Sheet. Follow this guide to setup the function and get your 
 
 The columns in the Google Sheet
 
-* date
-* volunteer_name
-* mobile_no
-* time
-* vehicle_number
-* location_name
+* leader_name
+* leader_mobile
+* group_state
+* present_address
+* present_district
+* total_men
+* total_women
+* total_children
+* total_person
+* special_request
+* post_lockdown
+* present_landmark
 * location_gps
 * image_1
 * image_2
