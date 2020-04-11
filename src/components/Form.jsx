@@ -57,7 +57,7 @@ const Form = (props) => {
 
     if (image1) {
       try {
-        const obj = await addPhoto(album, image1, values.mobile_no);
+        const obj = await addPhoto(album, image1, values.leader_mobile);
         setUpload1(status.COMPLETE);
         data["image_1"] = obj.Location;
       } catch (e) {
@@ -67,7 +67,7 @@ const Form = (props) => {
 
     if (image2) {
       try {
-        const obj = await addPhoto(album, image2, values.mobile_no);
+        const obj = await addPhoto(album, image2, values.leader_mobile);
         setUpload1(status.COMPLETE);
         data["image_2"] = obj.Location;
       } catch (e) {
@@ -366,7 +366,7 @@ const Form = (props) => {
       <h4 className="has-text-weight-bold">Landmark Photo</h4>
       <PhotoSelector setFile={setImage1} />
 
-      <h4 className="has-text-weight-bold">Location Photo</h4>
+      <h4 className="has-text-weight-bold">Group Leader Photo</h4>
       <PhotoSelector setFile={setImage2} />
 
       <div className="field">
