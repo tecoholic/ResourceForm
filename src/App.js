@@ -9,7 +9,7 @@ function App() {
   const [submitted, setSubmitted] = useState(false);
   return (
     <div className="App">
-      <div><img src="%PUBLIC_URL%/LabourDept.jpg" /></div>
+      <div className="has-text-centered"><img src="LabourDept.jpg" alt="Labour Department" /></div>
       <h1 className="is-size-4 has-text-centered">Migrant Labourers Registration</h1>
       { !submitted ? <Form url={GOOGLE_MACRO_URL} submitted={setSubmitted}/>: <ThankYou/> }
     </div>
