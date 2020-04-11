@@ -81,14 +81,14 @@ export function addPhoto(albumName, file, phoneNumber) {
 }
 
 /**
- * Creates a new album with current date in YYYYMMDD format on the S3 bucket.
+ * Creates a new album with current date in paper-YYYYMMDD format on the S3 bucket.
  * This also checks if it needs to be created, and only creates it when needed.
  *
  * @returns {Promise<string>} The name of the album
  */
 
 export function createAlbum() {
-  const albumName = yyyymmdd(new Date());
+  const albumName = "paper-" + yyyymmdd(new Date());
   const albumKey = encodeURIComponent(albumName) + "/";
   return new Promise((resolve, reject) => {
     s3.headObject({Key: albumKey}, function(err, data) {
