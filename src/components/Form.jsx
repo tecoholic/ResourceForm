@@ -13,6 +13,7 @@ const Form = (props) => {
     COMPLETE: 2,
     ERROR: 3
   };
+  this.totalPersons = 0;
   const { handleSubmit, register, errors } = useForm();
   const [currentLocation, setCurrentLocation] = useState([15, 78]);
   const [locationFetched, setLocationFetched] = useState(false);
@@ -23,7 +24,11 @@ const Form = (props) => {
   const [image2, setImage2] = useState(null);
   const [upload1, setUpload1] = useState(status.PENDING);
   const [upload2, setUpload2] = useState(status.PENDING);
-
+  
+  recalculateTotalPerson = (e) => {
+    this.totalPersons = this.total_men.value + this.total_women.value + this.total_children.value;
+  }
+  
   useEffect(() => {
     if (locationFetched) {
       return;
@@ -242,6 +247,7 @@ const Form = (props) => {
               ref={register({
                 required: 'Required'
               })}
+              onChange = {this.recalculateTotalPerson}
             />
           </div>
           {errors.total_men && errors.total_men.message ?
@@ -259,6 +265,7 @@ const Form = (props) => {
               ref={register({
                 required: 'Required'
               })}
+              onChange = {this.recalculateTotalPerson}
             />
           </div>
           {errors.total_women && errors.total_women.message ?
@@ -276,6 +283,7 @@ const Form = (props) => {
               ref={register({
                 required: 'Required'
               })}
+              onChange = {this.recalculateTotalPerson}
             />
           </div>
           {errors.total_children && errors.total_children.message ?
@@ -285,7 +293,8 @@ const Form = (props) => {
         <Grid item xs={12} sm={6}>
           <label className="label" htmlFor="total_person">Total Person in Group</label>
           <div className="control">
-            <input
+            {this.totalPersons}
+            <!--<input
               className="input"
               type="number"
               id="total_person"
@@ -293,7 +302,7 @@ const Form = (props) => {
               ref={register({
                 required: 'Required'
               })}
-            />
+            />-->
           </div>
           {errors.total_person && errors.total_person.message ?
             <p className="help is-danger">{errors.total_person.message}</p> :
