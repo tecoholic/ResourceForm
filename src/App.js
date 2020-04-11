@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="App">
       <div className="has-text-centered"><img src="LabourDept.jpg" alt="Labour Department" /></div>
-      <h1 className="is-size-4 has-text-centered">Migrant Labourers Registration</h1>
+      <h1 className="is-size-4 has-text-centered">Labours Heatmap Form</h1>
       { !submitted ? <Form url={GOOGLE_MACRO_URL} submitted={setSubmitted}/>: <ThankYou/> }
     </div>
   );
